@@ -25,37 +25,30 @@
 <script>
 import InputTodo from "../components/InputTodo.vue";
 import TodoItem from "../components/TodoItem.vue";
-import { v4 as uuidv4 } from "uuid";
 
 export default {
     data() {
         return {
             isAdding: false,
-            todos: [],
         };
+    },
+    computed: {
+        todos() {
+            return this.$store.state.todos;
+        },
     },
     components: { InputTodo, TodoItem },
     methods: {
         submitted(desc) {
             this.isAdding = true;
-            this.todos.push({
-                id: uuidv4(),
-                desc: desc,
-                isCompleted: false,
-            });
+            this.$store.dispatch("addTodo", desc);
             this.isAdding = false;
         },
         deleteItem(id) {
-            this.todos = this.todos.filter((item) => {
-                return item.id !== id;
-            });
+            this.$store.dispatch("removeTodo", id);
         },
         completed(id) {
-            this.todos.forEach((item) => {
-                if (item.id === id) {
-                    item.isCompleted = true;
-                }
-            });
+            this.$store.dispatch("completedTodo", id);
         },
     },
 };
